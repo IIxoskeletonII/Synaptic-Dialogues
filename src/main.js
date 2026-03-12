@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import data from '../data/processed_data.json'; // <-- FIX: Vite module import for the JSON data
 
 // --- SCENE SETUP ---
 const scene = new THREE.Scene();
@@ -82,55 +83,49 @@ const getScale = (depth) => {
 const neuralNodes = [];
 
 // --- DATA FETCHING & INSTANTIATION ---
-async function initNeuralNetwork() {
-    try {
-        const response = await fetch('processed_data.json');
-        const data = await response.json();
+// FIX: Removed async/await and fetch(). We now use the imported 'data' directly.
+function initNeuralNetwork() {
+    // Used to create sequential connections
+    const points = [];
 
-        // Used to create sequential connections
-        const points = [];
+    data.forEach((interaction, index) => {
+        const geometry = getGeometry(interaction.catalyst);
+        const material = getMaterial(interaction.tone);
+        const mesh = new THREE.Mesh(geometry, material);
 
-        data.forEach((interaction, index) => {
-            const geometry = getGeometry(interaction.catalyst);
-            const material = getMaterial(interaction.tone);
-            const mesh = new THREE.Mesh(geometry, material);
+        // Positioning: X based on sequence/time, Y based on Time of Day, Z staggered
+        const posX = (index - (data.length / 2)) * 4; 
+        const posY = getYPosition(interaction.timeOfDay);
+        const posZ = (Math.random() - 0.5) * 10; 
+        
+        mesh.position.set(posX, posY, posZ);
+        points.push(new THREE.Vector3(posX, posY, posZ));
 
-            // Positioning: X based on sequence/time, Y based on Time of Day, Z staggered
-            const posX = (index - (data.length / 2)) * 4; 
-            const posY = getYPosition(interaction.timeOfDay);
-            const posZ = (Math.random() - 0.5) * 10; 
-            
-            mesh.position.set(posX, posY, posZ);
-            points.push(new THREE.Vector3(posX, posY, posZ));
+        // Apply Scale based on Depth
+        const nodeScale = getScale(interaction.depth);
+        mesh.scale.set(nodeScale, nodeScale, nodeScale);
 
-            // Apply Scale based on Depth
-            const nodeScale = getScale(interaction.depth);
-            mesh.scale.set(nodeScale, nodeScale, nodeScale);
+        // 3. Store Friction data for Particle Turbulence in the render loop
+        mesh.userData = { 
+            friction: interaction.friction,
+            baseX: posX,
+            baseY: posY,
+            baseZ: posZ,
+            randomOffset: Math.random() * Math.PI * 2
+        };
 
-            // 3. Store Friction data for Particle Turbulence in the render loop
-            mesh.userData = { 
-                friction: interaction.friction,
-                baseX: posX,
-                baseY: posY,
-                baseZ: posZ,
-                randomOffset: Math.random() * Math.PI * 2
-            };
+        scene.add(mesh);
+        neuralNodes.push(mesh);
+    });
 
-            scene.add(mesh);
-            neuralNodes.push(mesh);
-        });
-
-        // 5. Trails/Connections: Draw a line connecting the thoughts sequentially
-        const lineMaterial = new THREE.LineBasicMaterial({ color: 0x444444, transparent: true, opacity: 0.4 });
-        const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
-        const thoughtTrail = new THREE.Line(lineGeometry, lineMaterial);
-        scene.add(thoughtTrail);
-
-    } catch (error) {
-        console.error("Data mapping failed. Check processed_data.json path.", error);
-    }
+    // 5. Trails/Connections: Draw a line connecting the thoughts sequentially
+    const lineMaterial = new THREE.LineBasicMaterial({ color: 0x444444, transparent: true, opacity: 0.4 });
+    const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+    const thoughtTrail = new THREE.Line(lineGeometry, lineMaterial);
+    scene.add(thoughtTrail);
 }
 
+// Call the synchronous function
 initNeuralNetwork();
 
 // --- ANIMATION LOOP ---
