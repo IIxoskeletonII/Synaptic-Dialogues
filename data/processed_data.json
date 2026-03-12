@@ -1,0 +1,23 @@
+[
+  { "timestamp": "05/03/2026 15:58:26", "catalyst": "Curiosity/Rabbit Hole", "timeOfDay": "Afternoon", "friction": 3, "tone": "Conversational", "depth": "Lost in the Sauce (>30 mins)" },
+  { "timestamp": "05/03/2026 22:49:30", "catalyst": "Curiosity/Rabbit Hole", "timeOfDay": "Evening", "friction": 1, "tone": "Conversational", "depth": "The Back-and-Forth (2-10 mins)" },
+  { "timestamp": "06/03/2026 15:02:55", "catalyst": "Urgency/Deadline", "timeOfDay": "Afternoon", "friction": 1, "tone": "Commanding/Robotic", "depth": "Hit and Run (<2 mins)" },
+  { "timestamp": "07/03/2026 19:50:24", "catalyst": "Urgency/Deadline", "timeOfDay": "Evening", "friction": 2, "tone": "Commanding/Robotic", "depth": "Hit and Run (<2 mins)" },
+  { "timestamp": "07/03/2026 20:16:16", "catalyst": "Curiosity/Rabbit Hole", "timeOfDay": "Evening", "friction": 3, "tone": "Commanding/Robotic", "depth": "The Back-and-Forth (2-10 mins)" },
+  { "timestamp": "08/03/2026 15:17:45", "catalyst": "Curiosity/Rabbit Hole", "timeOfDay": "Afternoon", "friction": 4, "tone": "Commanding/Robotic", "depth": "Hit and Run (<2 mins)" },
+  { "timestamp": "09/03/2026 14:27:25", "catalyst": "Debugging/Stuck", "timeOfDay": "Afternoon", "friction": 4, "tone": "Conversational", "depth": "Lost in the Sauce (>30 mins)" },
+  { "timestamp": "09/03/2026 17:26:09", "catalyst": "Debugging/Stuck", "timeOfDay": "Afternoon", "friction": 4, "tone": "Conversational", "depth": "Deep Dive (10-30 mins)" },
+  { "timestamp": "10/03/2026 17:24:45", "catalyst": "Efficiency/Laziness", "timeOfDay": "Afternoon", "friction": 1, "tone": "Commanding/Robotic", "depth": "Hit and Run (<2 mins)" },
+  { "timestamp": "10/03/2026 17:40:56", "catalyst": "Curiosity/Rabbit Hole", "timeOfDay": "Afternoon", "friction": 1, "tone": "Commanding/Robotic", "depth": "Hit and Run (<2 mins)" },
+  { "timestamp": "10/03/2026 18:11:46", "catalyst": "Curiosity/Rabbit Hole", "timeOfDay": "Evening", "friction": 1, "tone": "Commanding/Robotic", "depth": "Hit and Run (<2 mins)" },
+  { "timestamp": "10/03/2026 21:02:46", "catalyst": "Blank Page Syndrome", "timeOfDay": "Evening", "friction": 3, "tone": "Frustrated/Aggressive", "depth": "Deep Dive (10-30 mins)" },
+  { "timestamp": "11/03/2026 13:30:19", "catalyst": "Debugging/Stuck", "timeOfDay": "Afternoon", "friction": 4, "tone": "Conversational", "depth": "Lost in the Sauce (>30 mins)" },
+  { "timestamp": "11/03/2026 13:49:00", "catalyst": "Urgency/Deadline", "timeOfDay": "Afternoon", "friction": 1, "tone": "Conversational", "depth": "Hit and Run (<2 mins)" },
+  { "timestamp": "11/03/2026 14:28:33", "catalyst": "Debugging/Stuck", "timeOfDay": "Afternoon", "friction": 2, "tone": "Commanding/Robotic", "depth": "The Back-and-Forth (2-10 mins)" },
+  { "timestamp": "11/03/2026 14:32:37", "catalyst": "Curiosity/Rabbit Hole", "timeOfDay": "Afternoon", "friction": 1, "tone": "Conversational", "depth": "Hit and Run (<2 mins)" },
+  { "timestamp": "11/03/2026 15:48:08", "catalyst": "Debugging/Stuck", "timeOfDay": "Afternoon", "friction": 2, "tone": "Commanding/Robotic", "depth": "The Back-and-Forth (2-10 mins)" },
+  { "timestamp": "11/03/2026 15:59:14", "catalyst": "Curiosity/Rabbit Hole", "timeOfDay": "Afternoon", "friction": 1, "tone": "Commanding/Robotic", "depth": "Hit and Run (<2 mins)" },
+  { "timestamp": "11/03/2026 16:58:36", "catalyst": "Efficiency/Laziness", "timeOfDay": "Afternoon", "friction": 1, "tone": "Commanding/Robotic", "depth": "Hit and Run (<2 mins)" },
+  { "timestamp": "12/03/2026 01:21:53", "catalyst": "Blank Page Syndrome", "timeOfDay": "Late Night", "friction": 3, "tone": "Conversational", "depth": "Lost in the Sauce (>30 mins)" },
+  { "timestamp": "12/03/2026 12:27:57", "catalyst": "Efficiency/Laziness", "timeOfDay": "Afternoon", "friction": 2, "tone": "Conversational", "depth": "The Back-and-Forth (2-10 mins)" }
+]
