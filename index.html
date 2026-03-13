@@ -5,12 +5,115 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Synaptic Dialogues | Data Humanism</title>
     <style>
-      body { margin: 0; overflow: hidden; background-color: #050505; }
-      #canvas-container { width: 100vw; height: 100vh; }
+      body { 
+        margin: 0; 
+        overflow: hidden; 
+        background-color: #05050a; 
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        color: #e0e0e0;
+      }
+      #canvas-container { width: 100vw; height: 100vh; position: absolute; z-index: 1; }
+      
+      /* UI Overlay Layer */
+      #ui-layer {
+        position: absolute;
+        top: 0; left: 0; width: 100vw; height: 100vh;
+        z-index: 10;
+        /* Critical: Allows your mouse to click "through" the UI to rotate the 3D camera */
+        pointer-events: none; 
+      }
+
+      /* Title Container */
+      .header {
+        position: absolute;
+        top: 30px; left: 40px;
+        background: rgba(10, 10, 15, 0.7);
+        padding: 20px 30px;
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+      }
+      .header h1 { margin: 0 0 5px 0; font-size: 24px; font-weight: 300; letter-spacing: 1px; color: #fff; }
+      .header p { margin: 0; font-size: 14px; color: #aaa; }
+
+      /* Legend Container */
+      .legend {
+        position: absolute;
+        bottom: 30px; left: 40px;
+        background: rgba(10, 10, 15, 0.7);
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        font-size: 13px;
+        line-height: 1.6;
+      }
+      .legend h3 { margin: 0 0 10px 0; color: #fff; font-size: 15px; font-weight: 400; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 5px; }
+      .legend-section { margin-bottom: 15px; }
+      .legend-section:last-child { margin-bottom: 0; }
+      .legend-row { display: flex; align-items: center; margin-bottom: 4px; }
+      .color-box { width: 12px; height: 12px; margin-right: 8px; border-radius: 2px; }
+
+      /* The Hover Tooltip */
+      #tooltip {
+        position: absolute;
+        top: 0; left: 0;
+        background: rgba(15, 15, 20, 0.9);
+        padding: 15px;
+        border-radius: 6px;
+        border: 1px solid rgba(255,255,255,0.2);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        color: #fff;
+        font-size: 13px;
+        pointer-events: none;
+        opacity: 0; /* Hidden by default */
+        transition: opacity 0.2s ease;
+        z-index: 20;
+        backdrop-filter: blur(5px);
+        min-width: 220px;
+      }
+      #tooltip strong { color: #aaa; font-weight: 600; }
     </style>
   </head>
   <body>
     <div id="canvas-container"></div>
+
+    <div id="ui-layer">
+      
+      <div class="header">
+        <h1>Synaptic Dialogues</h1>
+        <p>A Data Humanism exploration of AI Interaction</p>
+      </div>
+
+      <div class="legend">
+        <h3>Decoding the Topography</h3>
+        
+        <div class="legend-section">
+          <strong style="color: #fff">Tone (Glow Color)</strong>
+          <div class="legend-row"><div class="color-box" style="background:#aaaaaa;"></div>Commanding/Robotic</div>
+          <div class="legend-row"><div class="color-box" style="background:#00ffcc;"></div>Conversational</div>
+          <div class="legend-row"><div class="color-box" style="background:#ff3333;"></div>Frustrated/Aggressive</div>
+          <div class="legend-row"><div class="color-box" style="background:#ffcc00;"></div>Overly Polite</div>
+        </div>
+
+        <div class="legend-section">
+          <strong style="color: #fff">Catalyst (Geometry)</strong><br>
+          Box = Blank Page | Sphere = Efficiency<br>
+          Tetrahedron = Urgency | Torus = Curiosity<br>
+          Octahedron = Debugging
+        </div>
+
+        <div class="legend-section">
+          <strong style="color: #fff">Friction:</strong> Particle Vibration<br>
+          <strong style="color: #fff">Depth:</strong> Node Scale<br>
+          <strong style="color: #fff">Time of Day:</strong> Y-Axis Height
+        </div>
+      </div>
+
+    </div>
+
+    <div id="tooltip"></div>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

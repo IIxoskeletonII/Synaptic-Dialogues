@@ -9,11 +9,10 @@ scene.fog = new THREE.FogExp2(0x05050a, 0.02);
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0, 0, 40);
 
-// OPTIMIZATION 1: Force High-Performance GPU and disable anti-aliasing for raw speed
 const renderer = new THREE.WebGLRenderer({ 
     antialias: false, 
     alpha: true,
-    powerPreference: "high-performance" // Demands the RTX 3060 if available
+    powerPreference: "high-performance" 
 });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
@@ -30,7 +29,7 @@ const pointLight = new THREE.PointLight(0xffffff, 2);
 pointLight.position.set(10, 10, 10);
 scene.add(pointLight);
 
-// --- SYNAPTIC DUST (Highly Optimized) ---
+// --- SYNAPTIC DUST ---
 const particlesGeometry = new THREE.BufferGeometry();
 const particlesCount = 600; 
 const posArray = new Float32Array(particlesCount * 3);
@@ -101,7 +100,6 @@ function initNeuralNetwork() {
         const colorHex = getColorHex(interaction.tone);
         const geometry = getGeometry(interaction.catalyst);
         
-        // Base Solid Material
         const material = new THREE.MeshStandardMaterial({ 
             color: colorHex, 
             wireframe: true,
@@ -111,7 +109,6 @@ function initNeuralNetwork() {
         
         const mesh = new THREE.Mesh(geometry, material);
 
-        // OPTIMIZATION 2: "Fake Bloom" using Additive Blending. Costs almost 0 performance.
         const glowMaterial = new THREE.MeshBasicMaterial({
             color: colorHex,
             transparent: true,
@@ -120,8 +117,8 @@ function initNeuralNetwork() {
             depthWrite: false
         });
         const glowMesh = new THREE.Mesh(geometry, glowMaterial);
-        glowMesh.scale.set(1.4, 1.4, 1.4); // Make the glow slightly larger than the core node
-        mesh.add(glowMesh); // Attach glow to the main mesh
+        glowMesh.scale.set(1.4, 1.4, 1.4); 
+        mesh.add(glowMesh); 
 
         const posX = (index - (data.length / 2)) * 4; 
         const posY = getYPosition(interaction.timeOfDay);
@@ -133,12 +130,14 @@ function initNeuralNetwork() {
         const nodeScale = getScale(interaction.depth);
         mesh.scale.set(nodeScale, nodeScale, nodeScale);
 
+        // FEATURE INJECTION: Store the entire raw interaction object so the Raycaster can read it
         mesh.userData = { 
             friction: interaction.friction,
             baseX: posX,
             baseY: posY,
             baseZ: posZ,
-            randomOffset: Math.random() * Math.PI * 2
+            randomOffset: Math.random() * Math.PI * 2,
+            rawInteraction: interaction 
         };
 
         scene.add(mesh);
@@ -162,6 +161,22 @@ function initNeuralNetwork() {
 }
 
 initNeuralNetwork();
+
+// --- NEW: RAYCASTER (HOVER INTERACTION) ---
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+const tooltip = document.getElementById('tooltip');
+let hoveredNode = null;
+
+window.addEventListener('mousemove', (event) => {
+    // Normalize mouse coordinates for Three.js (-1 to +1)
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    // Offset the tooltip slightly from the physical mouse cursor so it doesn't block clicks
+    tooltip.style.left = (event.clientX + 15) + 'px';
+    tooltip.style.top = (event.clientY + 15) + 'px';
+});
 
 // --- ANIMATION LOOP ---
 const clock = new THREE.Clock();
@@ -187,9 +202,48 @@ function animate() {
         }
     });
 
-    controls.update();
+    // --- RAYCASTER MATH CHECK ---
+    raycaster.setFromCamera(mouse, camera);
     
-    // OPTIMIZATION 3: Return to the native renderer, bypassing the heavy EffectComposer entirely
+    // Check for intersections. The 'false' parameter is crucial: it prevents the raycaster 
+    // from hitting the invisible "fake bloom" glow boxes around the nodes.
+    const intersects = raycaster.intersectObjects(neuralNodes, false);
+
+    if (intersects.length > 0) {
+        const object = intersects[0].object;
+        
+        if (hoveredNode !== object) {
+            hoveredNode = object;
+            document.body.style.cursor = 'pointer';
+            
+            // Extract raw data and populate the HTML tooltip dynamically
+            const data = object.userData.rawInteraction;
+            
+            // Convert numerical hex color back to a string for dynamic CSS text coloring
+            const hexString = '#' + getColorHex(data.tone).toString(16).padStart(6, '0');
+
+            tooltip.innerHTML = `
+                <div style="margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 5px; color: #fff;">
+                    ${data.timestamp}
+                </div>
+                <strong>Catalyst:</strong> <span style="color:#fff">${data.catalyst}</span><br>
+                <strong>Tone:</strong> <span style="color: ${hexString}; font-weight: bold;">${data.tone}</span><br>
+                <strong>Friction:</strong> <span style="color:#fff">${data.friction} / 5</span><br>
+                <strong>Depth:</strong> <span style="color:#fff">${data.depth}</span><br>
+                <strong>Time:</strong> <span style="color:#fff">${data.timeOfDay}</span>
+            `;
+            
+            tooltip.style.opacity = 1;
+        }
+    } else {
+        if (hoveredNode) {
+            hoveredNode = null;
+            document.body.style.cursor = 'default';
+            tooltip.style.opacity = 0; // Fade out tooltip
+        }
+    }
+
+    controls.update();
     renderer.render(scene, camera);
 }
 
