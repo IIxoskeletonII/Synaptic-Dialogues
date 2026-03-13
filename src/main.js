@@ -23,6 +23,7 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 
 // --- LIGHTING ---
+// Lighting is kept for the background dust, but nodes are now self-illuminating
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
 scene.add(ambientLight);
 const pointLight = new THREE.PointLight(0xffffff, 2);
@@ -61,11 +62,12 @@ const getGeometry = (catalyst) => {
 };
 
 const getColorHex = (tone) => {
+    // UPDATED: Bright, highly visible neon colors for dark backgrounds
     switch(tone) {
-        case 'Commanding/Robotic': return 0xaaaaaa; 
-        case 'Conversational': return 0x00ffcc; 
-        case 'Frustrated/Aggressive': return 0xff3333; 
-        case 'Overly Polite': return 0xffcc00; 
+        case 'Commanding/Robotic': return 0xb088ff; // Neon Purple
+        case 'Conversational': return 0x00ffcc;     // Neon Cyan
+        case 'Frustrated/Aggressive': return 0xff4444; // Neon Red
+        case 'Overly Polite': return 0xffcc00;      // Neon Yellow
         default: return 0xffffff;
     }
 };
@@ -100,19 +102,21 @@ function initNeuralNetwork() {
         const colorHex = getColorHex(interaction.tone);
         const geometry = getGeometry(interaction.catalyst);
         
-        const material = new THREE.MeshStandardMaterial({ 
+        // FIX: Changed to MeshBasicMaterial so it ignores lighting and is always 100% bright
+        const material = new THREE.MeshBasicMaterial({ 
             color: colorHex, 
             wireframe: true,
             transparent: true,
-            opacity: 0.9
+            opacity: 1.0 
         });
         
         const mesh = new THREE.Mesh(geometry, material);
 
+        // FIX: Increased opacity from 0.15 to 0.4 for a stronger glow effect
         const glowMaterial = new THREE.MeshBasicMaterial({
             color: colorHex,
             transparent: true,
-            opacity: 0.15,
+            opacity: 0.4,
             blending: THREE.AdditiveBlending,
             depthWrite: false
         });
@@ -130,7 +134,6 @@ function initNeuralNetwork() {
         const nodeScale = getScale(interaction.depth);
         mesh.scale.set(nodeScale, nodeScale, nodeScale);
 
-        // FEATURE INJECTION: Store the entire raw interaction object so the Raycaster can read it
         mesh.userData = { 
             friction: interaction.friction,
             baseX: posX,
@@ -146,34 +149,32 @@ function initNeuralNetwork() {
 
     if (points.length > 1) {
         const curve = new THREE.CatmullRomCurve3(points);
-        const curvePoints = curve.getPoints(points.length * 10); 
-        const lineGeometry = new THREE.BufferGeometry().setFromPoints(curvePoints);
         
-        const lineMaterial = new THREE.LineBasicMaterial({ 
-            color: 0x00ffcc, 
+        // FIX: Replaced 1px line with a physical 3D Tube for guaranteed visibility
+        const tubeGeometry = new THREE.TubeGeometry(curve, points.length * 10, 0.15, 8, false);
+        const tubeMaterial = new THREE.MeshBasicMaterial({ 
+            color: 0xffffff, 
             transparent: true, 
-            opacity: 0.15,
+            opacity: 0.35,
             blending: THREE.AdditiveBlending 
         });
-        const thoughtTrail = new THREE.Line(lineGeometry, lineMaterial);
+        const thoughtTrail = new THREE.Mesh(tubeGeometry, tubeMaterial);
         scene.add(thoughtTrail);
     }
 }
 
 initNeuralNetwork();
 
-// --- NEW: RAYCASTER (HOVER INTERACTION) ---
+// --- RAYCASTER (HOVER INTERACTION) ---
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 const tooltip = document.getElementById('tooltip');
 let hoveredNode = null;
 
 window.addEventListener('mousemove', (event) => {
-    // Normalize mouse coordinates for Three.js (-1 to +1)
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-    // Offset the tooltip slightly from the physical mouse cursor so it doesn't block clicks
     tooltip.style.left = (event.clientX + 15) + 'px';
     tooltip.style.top = (event.clientY + 15) + 'px';
 });
@@ -202,11 +203,7 @@ function animate() {
         }
     });
 
-    // --- RAYCASTER MATH CHECK ---
     raycaster.setFromCamera(mouse, camera);
-    
-    // Check for intersections. The 'false' parameter is crucial: it prevents the raycaster 
-    // from hitting the invisible "fake bloom" glow boxes around the nodes.
     const intersects = raycaster.intersectObjects(neuralNodes, false);
 
     if (intersects.length > 0) {
@@ -216,10 +213,7 @@ function animate() {
             hoveredNode = object;
             document.body.style.cursor = 'pointer';
             
-            // Extract raw data and populate the HTML tooltip dynamically
             const data = object.userData.rawInteraction;
-            
-            // Convert numerical hex color back to a string for dynamic CSS text coloring
             const hexString = '#' + getColorHex(data.tone).toString(16).padStart(6, '0');
 
             tooltip.innerHTML = `
@@ -239,7 +233,7 @@ function animate() {
         if (hoveredNode) {
             hoveredNode = null;
             document.body.style.cursor = 'default';
-            tooltip.style.opacity = 0; // Fade out tooltip
+            tooltip.style.opacity = 0; 
         }
     }
 

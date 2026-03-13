@@ -32,6 +32,7 @@
         border-radius: 8px;
         border: 1px solid rgba(255,255,255,0.1);
         backdrop-filter: blur(10px);
+        pointer-events: auto;
       }
       .header h1 { margin: 0 0 5px 0; font-size: 24px; font-weight: 300; letter-spacing: 1px; color: #fff; }
       .header p { margin: 0; font-size: 14px; color: #aaa; }
@@ -47,12 +48,84 @@
         backdrop-filter: blur(10px);
         font-size: 13px;
         line-height: 1.6;
+        pointer-events: auto;
       }
       .legend h3 { margin: 0 0 10px 0; color: #fff; font-size: 15px; font-weight: 400; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 5px; }
       .legend-section { margin-bottom: 15px; }
       .legend-section:last-child { margin-bottom: 0; }
       .legend-row { display: flex; align-items: center; margin-bottom: 4px; }
       .color-box { width: 12px; height: 12px; margin-right: 8px; border-radius: 2px; }
+
+      /* Insights Sidebar */
+      .insights-sidebar {
+        position: absolute;
+        top: 30px; 
+        right: 40px;
+        width: 320px;
+        background: rgba(10, 10, 15, 0.75);
+        padding: 25px;
+        border-radius: 8px;
+        border: 1px solid rgba(255,255,255,0.1);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        pointer-events: auto;
+      }
+      
+      .insights-sidebar h3 {
+        margin: 0 0 15px 0;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 400;
+        border-bottom: 1px solid rgba(255,255,255,0.2);
+        padding-bottom: 8px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      .insight-card {
+        margin-bottom: 15px;
+        background: rgba(255,255,255,0.03);
+        padding: 12px;
+        border-radius: 6px;
+        border-left: 2px solid #b088ff; 
+      }
+      .insight-card:last-child { margin-bottom: 0; }
+      
+      .insight-card h4 {
+        margin: 0 0 5px 0;
+        font-size: 13px;
+        color: #fff;
+      }
+      .insight-card p {
+        margin: 0;
+        font-size: 12px;
+        color: #bbb;
+        line-height: 1.5;
+      }
+
+      /* Subtle UX Instructions */
+      .ux-hint {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(10, 10, 15, 0.5);
+        padding: 8px 16px;
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.05);
+        color: #888;
+        font-size: 11px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        backdrop-filter: blur(5px);
+        animation: pulseText 3s infinite alternate;
+      }
+
+      @keyframes pulseText {
+        0% { opacity: 0.5; }
+        100% { opacity: 1; color: #fff; }
+      }
 
       /* The Hover Tooltip */
       #tooltip {
@@ -66,7 +139,7 @@
         color: #fff;
         font-size: 13px;
         pointer-events: none;
-        opacity: 0; /* Hidden by default */
+        opacity: 0; 
         transition: opacity 0.2s ease;
         z-index: 20;
         backdrop-filter: blur(5px);
@@ -90,9 +163,9 @@
         
         <div class="legend-section">
           <strong style="color: #fff">Tone (Glow Color)</strong>
-          <div class="legend-row"><div class="color-box" style="background:#aaaaaa;"></div>Commanding/Robotic</div>
+          <div class="legend-row"><div class="color-box" style="background:#b088ff;"></div>Commanding/Robotic</div>
           <div class="legend-row"><div class="color-box" style="background:#00ffcc;"></div>Conversational</div>
-          <div class="legend-row"><div class="color-box" style="background:#ff3333;"></div>Frustrated/Aggressive</div>
+          <div class="legend-row"><div class="color-box" style="background:#ff4444;"></div>Frustrated/Aggressive</div>
           <div class="legend-row"><div class="color-box" style="background:#ffcc00;"></div>Overly Polite</div>
         </div>
 
@@ -108,6 +181,29 @@
           <strong style="color: #fff">Depth:</strong> Node Scale<br>
           <strong style="color: #fff">Time of Day:</strong> Y-Axis Height
         </div>
+      </div>
+
+      <div class="insights-sidebar">
+        <h3>Key Behavioral Insights</h3>
+        
+        <div class="insight-card" style="border-left-color: #00ffcc;">
+          <h4>1. The Debugging Paradox</h4>
+          <p>Despite maxing out Interaction Friction (4/5), "Debugging/Stuck" sessions consistently trigger a <strong>Conversational</strong> tone. The AI shifts from tool to peer during deep dives.</p>
+        </div>
+
+        <div class="insight-card" style="border-left-color: #b088ff;">
+          <h4>2. The Commanding Rabbit Hole</h4>
+          <p>Curiosity-driven interactions are highly efficient (Friction 1). They result in rapid, hit-and-run queries using a strict <strong>Commanding/Robotic</strong> tone.</p>
+        </div>
+
+        <div class="insight-card" style="border-left-color: #ff4444;">
+          <h4>3. Evening Frustrations</h4>
+          <p>"Blank Page Syndrome" predominantly occurs in the Evening/Late Night. It causes friction to spike (3/5) and is the sole trigger for a <strong>Frustrated/Aggressive</strong> tone.</p>
+        </div>
+      </div>
+
+      <div class="ux-hint">
+        Drag to Rotate &bull; Scroll to Zoom &bull; Hover Nodes to Inspect
       </div>
 
     </div>
