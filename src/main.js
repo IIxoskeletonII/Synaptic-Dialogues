@@ -26,37 +26,26 @@ const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
 scene.add(ambientLight);
 
 // --- SYNAPTIC DUST ---
-const particlesGeometry = new THREE.BufferGeometry();
-const particlesCount = 600; 
-const posArray = new Float32Array(particlesCount * 3);
-for(let i = 0; i < particlesCount * 3; i++) {
+const bgParticlesGeo = new THREE.BufferGeometry();
+const bgParticlesCount = 600; 
+const posArray = new Float32Array(bgParticlesCount * 3);
+for(let i = 0; i < bgParticlesCount * 3; i++) {
     posArray[i] = (Math.random() - 0.5) * 120; 
 }
-particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-const particlesMaterial = new THREE.PointsMaterial({
+bgParticlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+const bgParticlesMat = new THREE.PointsMaterial({
     size: 0.15, color: 0x4444ff, transparent: true,
     opacity: 0.3, blending: THREE.AdditiveBlending, depthWrite: false
 });
-const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-scene.add(particlesMesh);
+const bgParticlesMesh = new THREE.Points(bgParticlesGeo, bgParticlesMat);
+scene.add(bgParticlesMesh);
 
 // --- VISUAL ENCODING DICTIONARIES ---
-const getGeometry = (catalyst) => {
-    switch(catalyst) {
-        case 'Blank Page Syndrome': return new THREE.BoxGeometry(1.5, 1.5, 1.5);
-        case 'Efficiency/Laziness': return new THREE.SphereGeometry(1, 16, 16); 
-        case 'Urgency/Deadline': return new THREE.TetrahedronGeometry(1.2);
-        case 'Curiosity/Rabbit Hole': return new THREE.TorusGeometry(0.8, 0.3, 16, 32);
-        case 'Debugging/Stuck': return new THREE.OctahedronGeometry(1.2);
-        default: return new THREE.IcosahedronGeometry(1);
-    }
-};
-
 const getColorHex = (tone) => {
     switch(tone) {
         case 'Commanding/Robotic': return 0xb088ff; 
         case 'Conversational': return 0x00ffcc;     
-        case 'Frustrated/Aggressive': return 0xff4444; 
+        case 'Frustrated/Aggressive': return 0xff5555; 
         case 'Overly Polite': return 0xffcc00;      
         default: return 0xffffff;
     }
@@ -82,32 +71,92 @@ const getScale = (depth) => {
     }
 };
 
-const neuralNodes = [];
+// --- PROCEDURAL PARTICLE CONSTELLATIONS ---
+function createCatalystParticles(catalyst, colorHex) {
+    const particleCount = catalyst === 'Blank Page Syndrome' ? 100 : 300;
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(particleCount * 3);
+
+    for (let i = 0; i < particleCount; i++) {
+        let x, y, z;
+        if (catalyst === 'Efficiency/Laziness') {
+            const r = Math.random() * 0.6;
+            const theta = Math.random() * 2 * Math.PI;
+            const phi = Math.acos(2 * Math.random() - 1);
+            x = r * Math.sin(phi) * Math.cos(theta);
+            y = r * Math.sin(phi) * Math.sin(theta);
+            z = r * Math.cos(phi);
+        } else if (catalyst === 'Curiosity/Rabbit Hole') {
+            const angle = Math.random() * Math.PI * 4;
+            const radius = (angle / (Math.PI * 4)) * 1.5;
+            x = Math.cos(angle) * radius + (Math.random()-0.5)*0.3;
+            y = (Math.random() - 0.5) * 0.4;
+            z = Math.sin(angle) * radius + (Math.random()-0.5)*0.3;
+        } else if (catalyst === 'Urgency/Deadline') {
+            const r = Math.random() > 0.8 ? 1.8 : 0.7; 
+            const theta = Math.random() * 2 * Math.PI;
+            const phi = Math.acos(2 * Math.random() - 1);
+            x = r * Math.sin(phi) * Math.cos(theta);
+            y = r * Math.sin(phi) * Math.sin(theta);
+            z = r * Math.cos(phi);
+        } else if (catalyst === 'Debugging/Stuck') {
+            x = (Math.random() - 0.5) * 2.5;
+            y = (Math.random() - 0.5) * 2.5;
+            z = (Math.random() - 0.5) * 2.5;
+        } else {
+            x = (Math.random() - 0.5) * 3.5;
+            y = (Math.random() - 0.5) * 3.5;
+            z = (Math.random() - 0.5) * 3.5;
+        }
+        positions[i*3] = x;
+        positions[i*3+1] = y;
+        positions[i*3+2] = z;
+    }
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    
+    const material = new THREE.PointsMaterial({
+        color: colorHex, size: 0.14, transparent: true,
+        opacity: 1.0, blending: THREE.AdditiveBlending, depthWrite: false
+    });
+    
+    return new THREE.Points(geometry, material);
+}
+
+const nodeGroups = [];
+const hitboxes = []; 
 let synapticCurve;
 const synapticPulses = []; 
+
+// --- DYNAMIC CINEMATIC TRAVERSAL SETUP ---
+let isIntroPlaying = true;
+let introProgress = 0;
+// FIX: Extended to 18 seconds to ensure a slow, majestic, constant speed across all nodes
+const introDuration = 18.0; 
+controls.enabled = false;
+
+const currentCamPos = new THREE.Vector3();
+const currentLookTarget = new THREE.Vector3();
+const idealCamPos = new THREE.Vector3();
+const idealLookTarget = new THREE.Vector3();
 
 // --- DATA FETCHING & INSTANTIATION ---
 function initNeuralNetwork() {
     const points = [];
 
     data.forEach((interaction, index) => {
+        const group = new THREE.Group();
         const colorHex = getColorHex(interaction.tone);
-        const geometry = getGeometry(interaction.catalyst);
         
-        const material = new THREE.MeshBasicMaterial({ 
-            color: colorHex, wireframe: true, transparent: true, opacity: 1.0 
-        });
-        const mesh = new THREE.Mesh(geometry, material);
+        const particles = createCatalystParticles(interaction.catalyst, colorHex);
+        group.add(particles);
 
         const glowMaterial = new THREE.MeshBasicMaterial({
-            color: colorHex, transparent: true, opacity: 0.4,
+            color: colorHex, transparent: true, opacity: 0.3,
             blending: THREE.AdditiveBlending, depthWrite: false
         });
-        const glowMesh = new THREE.Mesh(geometry, glowMaterial);
-        glowMesh.scale.set(1.4, 1.4, 1.4); 
-        mesh.add(glowMesh); 
+        const glowSphere = new THREE.Mesh(new THREE.SphereGeometry(0.7, 16, 16), glowMaterial);
+        group.add(glowSphere);
 
-        // Sparks
         if (interaction.friction >= 4) {
             const sparkCount = 40;
             const sparkGeo = new THREE.BufferGeometry();
@@ -116,49 +165,53 @@ function initNeuralNetwork() {
             sparkGeo.setAttribute('position', new THREE.BufferAttribute(sparkPos, 3));
             
             const sparkMat = new THREE.PointsMaterial({
-                color: 0xff3333, size: 0.15, blending: THREE.AdditiveBlending, transparent: true
+                color: 0xff5555, size: 0.15, blending: THREE.AdditiveBlending, transparent: true
             });
             const sparks = new THREE.Points(sparkGeo, sparkMat);
-            mesh.add(sparks);
-            mesh.userData.sparks = sparks; 
+            group.add(sparks);
+            group.userData.sparks = sparks; 
         }
+
+        const hitboxGeo = new THREE.SphereGeometry(1.5, 8, 8);
+        const hitboxMat = new THREE.MeshBasicMaterial({ visible: false });
+        const hitbox = new THREE.Mesh(hitboxGeo, hitboxMat);
+        hitbox.userData = { rawInteraction: interaction };
+        group.add(hitbox);
+        hitboxes.push(hitbox);
 
         const posX = (index - (data.length / 2)) * 4; 
         const posY = getYPosition(interaction.timeOfDay);
         const posZ = (Math.random() - 0.5) * 15; 
         
-        mesh.position.set(posX, posY, posZ);
+        group.position.set(posX, posY, posZ);
         points.push(new THREE.Vector3(posX, posY, posZ));
 
         const nodeScale = getScale(interaction.depth);
-        mesh.scale.set(nodeScale, nodeScale, nodeScale);
+        group.scale.set(nodeScale, nodeScale, nodeScale);
 
-        // FEATURE 4: Store baseScale for organic "Breathing" animation
-        mesh.userData = { 
+        group.userData = { 
+            catalyst: interaction.catalyst,
             friction: interaction.friction,
             baseX: posX, baseY: posY, baseZ: posZ,
             baseScale: nodeScale,
-            randomOffset: Math.random() * Math.PI * 2,
-            rawInteraction: interaction 
+            randomOffset: Math.random() * Math.PI * 2
         };
 
-        scene.add(mesh);
-        neuralNodes.push(mesh);
+        scene.add(group);
+        nodeGroups.push(group);
     });
 
     if (points.length > 1) {
         synapticCurve = new THREE.CatmullRomCurve3(points);
         const tubeGeometry = new THREE.TubeGeometry(synapticCurve, points.length * 10, 0.15, 8, false);
         
-        // FEATURE 5: Data-Driven Gradient Tube Math
-        // We interpolate colors across the tube vertices based on the data points it connects.
         const vertexCount = tubeGeometry.attributes.position.count;
         const colors = new Float32Array(vertexCount * 3);
-        const uvs = tubeGeometry.attributes.uv; // uv.x represents progress along the tube (0 to 1)
+        const uvs = tubeGeometry.attributes.uv; 
 
         for (let i = 0; i < vertexCount; i++) {
             const u = uvs.getX(i);
-            const segmentFloat = u * (data.length - 1); // Which data segment are we in?
+            const segmentFloat = u * (data.length - 1); 
             const index1 = Math.floor(segmentFloat);
             const index2 = Math.min(index1 + 1, data.length - 1);
             const interpolation = segmentFloat - index1;
@@ -166,7 +219,6 @@ function initNeuralNetwork() {
             const color1 = new THREE.Color(getColorHex(data[index1].tone));
             const color2 = new THREE.Color(getColorHex(data[index2].tone));
             
-            // Lerp (blend) between the two colors based on exactly where the vertex is
             const finalColor = color1.clone().lerp(color2, interpolation);
 
             colors[i * 3] = finalColor.r;
@@ -175,14 +227,12 @@ function initNeuralNetwork() {
         }
         tubeGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-        // Use vertexColors: true to activate the gradient
         const tubeMaterial = new THREE.MeshBasicMaterial({ 
             vertexColors: true, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending 
         });
         const thoughtTrail = new THREE.Mesh(tubeGeometry, tubeMaterial);
         scene.add(thoughtTrail);
 
-        // Synaptic Pulses
         for(let i = 0; i < 6; i++) {
             const pulseMesh = new THREE.Mesh(
                 new THREE.SphereGeometry(0.3, 8, 8), 
@@ -191,6 +241,11 @@ function initNeuralNetwork() {
             scene.add(pulseMesh);
             synapticPulses.push({ mesh: pulseMesh, t: i * (1/6) }); 
         }
+
+        currentCamPos.copy(synapticCurve.getPointAt(0)).add(new THREE.Vector3(0, 5, 16));
+        currentLookTarget.copy(synapticCurve.getPointAt(0.01));
+        camera.position.copy(currentCamPos);
+        controls.target.copy(currentLookTarget);
     }
 }
 
@@ -209,7 +264,6 @@ data.forEach((item, index) => {
     const tick = document.createElement('div');
     tick.className = 'timeline-tick';
     
-    // FEATURE 2: Timeline "Memory Previews" Injection
     const tooltipContent = item.timestamp ? item.timestamp : `Interaction ${index + 1}`;
     tick.innerHTML = `<div class="tick-tooltip">${tooltipContent}</div>`;
     
@@ -217,12 +271,12 @@ data.forEach((item, index) => {
         document.querySelectorAll('.timeline-tick').forEach(t => t.classList.remove('active'));
         tick.classList.add('active');
 
-        const node = neuralNodes[index];
+        const group = nodeGroups[index];
         focusStartCameraPos.copy(camera.position);
         focusStartLookAt.copy(controls.target);
         
-        targetCameraPos.copy(node.position).add(new THREE.Vector3(0, 0, 12)); 
-        targetLookAt.copy(node.position);
+        targetCameraPos.copy(group.position).add(new THREE.Vector3(0, 0, 12)); 
+        targetLookAt.copy(group.position);
         
         focusProgress = 0;
         isFocusing = true;
@@ -233,19 +287,7 @@ data.forEach((item, index) => {
     timelineContainer.appendChild(tick);
 });
 
-// --- CINEMATIC INTRO SETUP ---
-let isIntroPlaying = true;
-let introProgress = 0;
-const introDuration = 6.5; 
-
-const introStartPos = new THREE.Vector3().copy(neuralNodes[0].position).add(new THREE.Vector3(0, 0, 4));
-const introEndPos = new THREE.Vector3(0, 0, 40);
-
-camera.position.copy(introStartPos);
-controls.target.copy(neuralNodes[0].position);
-controls.enabled = false;
-
-// --- RAYCASTER (HOVER INTERACTION) ---
+// --- RAYCASTER (HOVER & CLICK INTERACTION) ---
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 const tooltip = document.getElementById('tooltip');
@@ -258,6 +300,29 @@ window.addEventListener('mousemove', (event) => {
     tooltip.style.top = (event.clientY + 15) + 'px';
 });
 
+window.addEventListener('click', () => {
+    if (hoveredNode) {
+        const group = hoveredNode.parent;
+        const index = nodeGroups.indexOf(group);
+
+        if (index !== -1) {
+            document.querySelectorAll('.timeline-tick').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.timeline-tick')[index].classList.add('active');
+        }
+
+        focusStartCameraPos.copy(camera.position);
+        focusStartLookAt.copy(controls.target);
+        
+        targetCameraPos.copy(group.position).add(new THREE.Vector3(0, 0, 12)); 
+        targetLookAt.copy(group.position);
+        
+        focusProgress = 0;
+        isFocusing = true;
+        isIntroPlaying = false; 
+        controls.enabled = false;
+    }
+});
+
 // --- ANIMATION LOOP ---
 const clock = new THREE.Clock();
 
@@ -266,18 +331,47 @@ function animate() {
     const delta = clock.getDelta();
     const elapsedTime = clock.getElapsedTime();
 
-    particlesMesh.rotation.y = elapsedTime * 0.02;
+    bgParticlesMesh.rotation.y = elapsedTime * 0.02;
 
-    if (isIntroPlaying) {
+    // --- BUTTERY SMOOTH, CONSTANT SPEED TRAVERSAL LOGIC ---
+    if (isIntroPlaying && synapticCurve) {
         introProgress += delta / introDuration;
+        
         if (introProgress >= 1) {
             introProgress = 1;
             isIntroPlaying = false;
             controls.enabled = true; 
         }
-        const ease = 1 - Math.pow(1 - introProgress, 4);
-        camera.position.lerpVectors(introStartPos, introEndPos, ease);
-        controls.target.lerpVectors(neuralNodes[0].position, new THREE.Vector3(0, 0, 0), ease);
+
+        // 1. FIX: STRICTLY LINEAR PROGRESSION. No more speeding up in the middle.
+        const t = introProgress; 
+        
+        // 2. Map curve path & Look Ahead Point 
+        const pathPoint = synapticCurve.getPointAt(t);
+        const lookAheadT = Math.min(t + 0.05, 1.0); 
+        const pathAheadPoint = synapticCurve.getPointAt(lookAheadT);
+
+        // 3. FIX: LATE DETACHMENT. Power of 10 keeps the camera strictly on the drone path 
+        // until the final moments, preventing premature floating.
+        const pullOutFactor = Math.pow(introProgress, 10);
+
+        // 4. Ideal Drone Position
+        const dronePos = pathPoint.clone().add(new THREE.Vector3(0, 5, 16));
+
+        // 5. Ideal Final Overview Position
+        const overviewPos = new THREE.Vector3(0, 48, 0);
+
+        // 6. Blend Ideal Positions smoothly 
+        idealCamPos.lerpVectors(dronePos, overviewPos, pullOutFactor);
+        idealLookTarget.lerpVectors(pathAheadPoint, new THREE.Vector3(0, 0, 0), pullOutFactor);
+
+        // 7. ANTI-JITTER MAGIC: Exponential Moving Average (EMA) smoothing
+        const smoothing = 1 - Math.exp(-6 * delta);
+        currentCamPos.lerp(idealCamPos, smoothing);
+        currentLookTarget.lerp(idealLookTarget, smoothing * 1.5);
+
+        camera.position.copy(currentCamPos);
+        controls.target.copy(currentLookTarget);
     }
 
     if (isFocusing) {
@@ -301,28 +395,34 @@ function animate() {
         });
     }
 
-    // Node Animations
-    neuralNodes.forEach(node => {
-        const friction = node.userData.friction; 
+    // Node Group Animations
+    nodeGroups.forEach(group => {
+        const friction = group.userData.friction; 
+        const catalyst = group.userData.catalyst;
         
-        node.rotation.x = elapsedTime * 0.2 * (friction * 0.5);
-        node.rotation.y = elapsedTime * 0.3 * (friction * 0.5);
+        const organicBreath = Math.sin(elapsedTime * 2 + group.userData.randomOffset) * 0.08;
+        const currentScale = group.userData.baseScale + organicBreath;
+        group.scale.set(currentScale, currentScale, currentScale);
 
-        // FEATURE 4: Organic Breathing Node Math
-        // A slow sine wave combined with the node's random offset to make them pulsate organically
-        const organicBreath = Math.sin(elapsedTime * 2 + node.userData.randomOffset) * 0.08;
-        const currentScale = node.userData.baseScale + organicBreath;
-        node.scale.set(currentScale, currentScale, currentScale);
+        group.rotation.y += delta * 0.5;
 
-        if (friction > 1) {
-            const vibrationSpeed = elapsedTime * (friction * 0.8); 
-            const displacement = friction * 0.05; 
-            node.position.x = node.userData.baseX + Math.sin(vibrationSpeed + node.userData.randomOffset) * displacement;
-            node.position.y = node.userData.baseY + Math.cos(vibrationSpeed + node.userData.randomOffset) * displacement;
+        if (catalyst === 'Curiosity/Rabbit Hole') {
+            group.rotation.y += delta * 1.5; 
+        } else if (catalyst === 'Urgency/Deadline') {
+            group.position.x += (Math.random() - 0.5) * 0.08;
+            group.position.y += (Math.random() - 0.5) * 0.08;
+            group.position.lerp(new THREE.Vector3(group.userData.baseX, group.userData.baseY, group.userData.baseZ), 0.15);
         }
 
-        if (node.userData.sparks) {
-            const posAttr = node.userData.sparks.geometry.attributes.position;
+        if (friction > 1 && catalyst !== 'Urgency/Deadline') {
+            const vibrationSpeed = elapsedTime * (friction * 0.8); 
+            const displacement = friction * 0.05; 
+            group.position.x = group.userData.baseX + Math.sin(vibrationSpeed + group.userData.randomOffset) * displacement;
+            group.position.y = group.userData.baseY + Math.cos(vibrationSpeed + group.userData.randomOffset) * displacement;
+        }
+
+        if (group.userData.sparks) {
+            const posAttr = group.userData.sparks.geometry.attributes.position;
             for(let i = 0; i < posAttr.count; i++) {
                 let x = posAttr.getX(i);
                 let y = posAttr.getY(i);
@@ -340,7 +440,7 @@ function animate() {
     });
 
     raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects(neuralNodes, false);
+    const intersects = raycaster.intersectObjects(hitboxes, false);
 
     if (intersects.length > 0) {
         const object = intersects[0].object;

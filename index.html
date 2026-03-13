@@ -22,7 +22,7 @@
         pointer-events: none; 
       }
 
-      /* FEATURE 1: Glassmorphism 2.0 - Upgraded Blur, Transparency, and Inner Shadows */
+      /* Glassmorphism 2.0 - Upgraded Blur, Transparency, and Inner Shadows */
       .glass-panel {
         background: rgba(15, 15, 22, 0.45);
         border-radius: 12px;
@@ -93,7 +93,7 @@
         border-radius: 30px;
       }
       .timeline-tick {
-        position: relative; /* Added for tooltip positioning */
+        position: relative; 
         width: 14px; height: 14px;
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.2);
@@ -106,7 +106,7 @@
         transform: scale(1.3);
       }
 
-      /* FEATURE 2: Timeline "Memory Previews" Tooltip */
+      /* Timeline "Memory Previews" Tooltip */
       .tick-tooltip {
         position: absolute;
         bottom: 25px;
@@ -127,7 +127,6 @@
         backdrop-filter: blur(5px);
         z-index: 100;
       }
-      /* Little arrow for tooltip */
       .tick-tooltip::after {
         content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
         border-width: 5px; border-style: solid; border-color: rgba(255,255,255,0.15) transparent transparent transparent;
@@ -181,12 +180,14 @@
           <div class="legend-row"><div class="color-box" style="background:#ff4444; color:#ff4444;"></div>Frustrated/Aggressive</div>
           <div class="legend-row"><div class="color-box" style="background:#ffcc00; color:#ffcc00;"></div>Overly Polite</div>
         </div>
+        
         <div class="legend-section">
-          <strong style="color: #fff; display:block; margin-bottom:5px;">Catalyst (Geometry)</strong>
-          Box = Blank Page &nbsp;|&nbsp; Sphere = Efficiency<br>
-          Tetrahedron = Urgency &nbsp;|&nbsp; Torus = Curiosity<br>
-          Octahedron = Debugging
+          <strong style="color: #fff; display:block; margin-bottom:5px;">Catalyst (Constellation)</strong>
+          Blank Page = Sparse Mist &nbsp;|&nbsp; Efficiency = Dense Core<br>
+          Urgency = Vibrating Burst &nbsp;|&nbsp; Curiosity = Spiral Galaxy<br>
+          Debugging = Chaotic Cloud
         </div>
+
         <div class="legend-section" style="margin-top:10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
           <span style="color: #fff">Friction:</span> Particle Vibration & Sparks<br>
           <span style="color: #fff">Depth:</span> Node Scale<br>
