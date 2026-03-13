@@ -22,106 +22,79 @@
         pointer-events: none; 
       }
 
+      /* FEATURE 1: Glassmorphism 2.0 - Upgraded Blur, Transparency, and Inner Shadows */
+      .glass-panel {
+        background: rgba(15, 15, 22, 0.45);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: inset 0 0 1px rgba(255, 255, 255, 0.3), 0 10px 40px rgba(0, 0, 0, 0.6);
+        pointer-events: auto;
+      }
+
       /* Title Container */
       .header {
         position: absolute;
         top: 30px; left: 40px;
-        background: rgba(10, 10, 15, 0.7);
         padding: 20px 30px;
-        border-radius: 8px;
-        border: 1px solid rgba(255,255,255,0.1);
-        backdrop-filter: blur(10px);
-        pointer-events: auto;
       }
-      .header h1 { margin: 0 0 5px 0; font-size: 24px; font-weight: 300; letter-spacing: 1px; color: #fff; }
-      .header p { margin: 0; font-size: 14px; color: #aaa; }
+      .header h1 { margin: 0 0 5px 0; font-size: 24px; font-weight: 400; letter-spacing: 1.5px; color: #fff; text-shadow: 0 2px 10px rgba(255,255,255,0.2); }
+      .header p { margin: 0; font-size: 13px; color: #bbb; text-transform: uppercase; letter-spacing: 1px; }
 
       /* Legend Container */
       .legend {
         position: absolute;
         bottom: 30px; left: 40px;
-        background: rgba(10, 10, 15, 0.7);
         padding: 20px;
-        border-radius: 8px;
-        border: 1px solid rgba(255,255,255,0.1);
-        backdrop-filter: blur(10px);
         font-size: 13px;
         line-height: 1.6;
-        pointer-events: auto;
       }
-      .legend h3 { margin: 0 0 10px 0; color: #fff; font-size: 15px; font-weight: 400; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 5px; }
+      .legend h3 { margin: 0 0 12px 0; color: #fff; font-size: 14px; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
       .legend-section { margin-bottom: 15px; }
       .legend-section:last-child { margin-bottom: 0; }
-      .legend-row { display: flex; align-items: center; margin-bottom: 4px; }
-      .color-box { width: 12px; height: 12px; margin-right: 8px; border-radius: 2px; }
+      .legend-row { display: flex; align-items: center; margin-bottom: 6px; color: #ccc;}
+      .color-box { width: 12px; height: 12px; margin-right: 10px; border-radius: 3px; box-shadow: 0 0 8px currentColor; }
 
       /* Insights Sidebar */
       .insights-sidebar {
         position: absolute;
-        top: 30px; 
-        right: 40px;
+        top: 30px; right: 40px;
         width: 320px;
-        background: rgba(10, 10, 15, 0.75);
         padding: 25px;
-        border-radius: 8px;
-        border: 1px solid rgba(255,255,255,0.1);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        pointer-events: auto;
       }
-      
       .insights-sidebar h3 {
-        margin: 0 0 15px 0;
-        color: #fff;
-        font-size: 16px;
-        font-weight: 400;
-        border-bottom: 1px solid rgba(255,255,255,0.2);
-        padding-bottom: 8px;
-        letter-spacing: 1px;
-        text-transform: uppercase;
+        margin: 0 0 15px 0; color: #fff; font-size: 14px; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; letter-spacing: 1px; text-transform: uppercase;
       }
-
       .insight-card {
         margin-bottom: 15px;
         background: rgba(255,255,255,0.03);
-        padding: 12px;
-        border-radius: 6px;
-        border-left: 2px solid #b088ff; 
+        padding: 14px;
+        border-radius: 8px;
+        border-left: 3px solid #b088ff; 
+        transition: transform 0.2s ease, background 0.2s ease;
+      }
+      .insight-card:hover {
+        background: rgba(255,255,255,0.06);
+        transform: translateX(-3px);
       }
       .insight-card:last-child { margin-bottom: 0; }
-      
-      .insight-card h4 {
-        margin: 0 0 5px 0;
-        font-size: 13px;
-        color: #fff;
-      }
-      .insight-card p {
-        margin: 0;
-        font-size: 12px;
-        color: #bbb;
-        line-height: 1.5;
-      }
+      .insight-card h4 { margin: 0 0 6px 0; font-size: 13px; font-weight: 600; color: #fff; letter-spacing: 0.5px; }
+      .insight-card p { margin: 0; font-size: 12px; color: #aaa; line-height: 1.6; }
 
-      /* FEATURE 5: Interactive Timeline Scrubber */
+      /* Timeline Scrubber */
       .timeline-container {
         position: absolute;
-        bottom: 70px; 
-        left: 50%;
+        bottom: 70px; left: 50%;
         transform: translateX(-50%);
         display: flex;
         gap: 12px;
-        background: rgba(10, 10, 15, 0.7);
         padding: 15px 25px;
         border-radius: 30px;
-        border: 1px solid rgba(255,255,255,0.1);
-        backdrop-filter: blur(10px);
-        pointer-events: auto;
       }
-
       .timeline-tick {
-        width: 14px;
-        height: 14px;
+        position: relative; /* Added for tooltip positioning */
+        width: 14px; height: 14px;
         border-radius: 50%;
         background: rgba(255, 255, 255, 0.2);
         cursor: pointer;
@@ -133,100 +106,115 @@
         transform: scale(1.3);
       }
 
-      /* Subtle UX Instructions */
-      .ux-hint {
+      /* FEATURE 2: Timeline "Memory Previews" Tooltip */
+      .tick-tooltip {
         position: absolute;
         bottom: 25px;
         left: 50%;
-        transform: translateX(-50%);
-        color: #888;
+        transform: translateX(-50%) translateY(10px);
+        background: rgba(10, 10, 15, 0.95);
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: 1px solid rgba(255,255,255,0.15);
+        color: #fff;
         font-size: 11px;
-        letter-spacing: 1px;
-        text-transform: uppercase;
+        font-weight: 500;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        backdrop-filter: blur(5px);
+        z-index: 100;
+      }
+      /* Little arrow for tooltip */
+      .tick-tooltip::after {
+        content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+        border-width: 5px; border-style: solid; border-color: rgba(255,255,255,0.15) transparent transparent transparent;
+      }
+      .timeline-tick:hover .tick-tooltip {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      /* Subtle UX Instructions */
+      .ux-hint {
+        position: absolute;
+        bottom: 25px; left: 50%;
+        transform: translateX(-50%);
+        color: #888; font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
         animation: pulseText 3s infinite alternate;
         text-shadow: 0 2px 4px rgba(0,0,0,0.8);
       }
+      @keyframes pulseText { 0% { opacity: 0.5; } 100% { opacity: 1; color: #fff; } }
 
-      @keyframes pulseText {
-        0% { opacity: 0.5; }
-        100% { opacity: 1; color: #fff; }
-      }
-
-      /* The Hover Tooltip */
+      /* 3D Hover Tooltip */
       #tooltip {
-        position: absolute;
-        top: 0; left: 0;
-        background: rgba(15, 15, 20, 0.9);
-        padding: 15px;
-        border-radius: 6px;
-        border: 1px solid rgba(255,255,255,0.2);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        color: #fff;
-        font-size: 13px;
-        pointer-events: none;
-        opacity: 0; 
-        transition: opacity 0.2s ease;
-        z-index: 20;
-        backdrop-filter: blur(5px);
+        position: absolute; top: 0; left: 0;
+        background: rgba(15, 15, 22, 0.95);
+        padding: 18px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+        color: #fff; font-size: 13px; pointer-events: none; opacity: 0; 
+        transition: opacity 0.2s ease; z-index: 20;
+        backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
         min-width: 220px;
       }
-      #tooltip strong { color: #aaa; font-weight: 600; }
+      #tooltip strong { color: #aaa; font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+      .tooltip-value { font-size: 13px; font-weight: 500; margin-bottom: 6px; display: block;}
     </style>
   </head>
   <body>
     <div id="canvas-container"></div>
 
     <div id="ui-layer">
-      
-      <div class="header">
+      <div class="header glass-panel">
         <h1>Synaptic Dialogues</h1>
-        <p>A Data Humanism exploration of AI Interaction</p>
+        <p>A Data Humanism Exploration</p>
       </div>
 
-      <div class="legend">
+      <div class="legend glass-panel">
         <h3>Decoding the Topography</h3>
         <div class="legend-section">
-          <strong style="color: #fff">Tone (Glow Color)</strong>
-          <div class="legend-row"><div class="color-box" style="background:#b088ff;"></div>Commanding/Robotic</div>
-          <div class="legend-row"><div class="color-box" style="background:#00ffcc;"></div>Conversational</div>
-          <div class="legend-row"><div class="color-box" style="background:#ff4444;"></div>Frustrated/Aggressive</div>
-          <div class="legend-row"><div class="color-box" style="background:#ffcc00;"></div>Overly Polite</div>
+          <strong style="color: #fff; display:block; margin-bottom:5px;">Tone (Glow Color)</strong>
+          <div class="legend-row"><div class="color-box" style="background:#b088ff; color:#b088ff;"></div>Commanding/Robotic</div>
+          <div class="legend-row"><div class="color-box" style="background:#00ffcc; color:#00ffcc;"></div>Conversational</div>
+          <div class="legend-row"><div class="color-box" style="background:#ff4444; color:#ff4444;"></div>Frustrated/Aggressive</div>
+          <div class="legend-row"><div class="color-box" style="background:#ffcc00; color:#ffcc00;"></div>Overly Polite</div>
         </div>
         <div class="legend-section">
-          <strong style="color: #fff">Catalyst (Geometry)</strong><br>
-          Box = Blank Page | Sphere = Efficiency<br>
-          Tetrahedron = Urgency | Torus = Curiosity<br>
+          <strong style="color: #fff; display:block; margin-bottom:5px;">Catalyst (Geometry)</strong>
+          Box = Blank Page &nbsp;|&nbsp; Sphere = Efficiency<br>
+          Tetrahedron = Urgency &nbsp;|&nbsp; Torus = Curiosity<br>
           Octahedron = Debugging
         </div>
-        <div class="legend-section">
-          <strong style="color: #fff">Friction:</strong> Particle Vibration & Sparks<br>
-          <strong style="color: #fff">Depth:</strong> Node Scale<br>
-          <strong style="color: #fff">Time of Day:</strong> Y-Axis Height
+        <div class="legend-section" style="margin-top:10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+          <span style="color: #fff">Friction:</span> Particle Vibration & Sparks<br>
+          <span style="color: #fff">Depth:</span> Node Scale<br>
+          <span style="color: #fff">Time of Day:</span> Y-Axis Height
         </div>
       </div>
 
-      <div class="insights-sidebar">
+      <div class="insights-sidebar glass-panel">
         <h3>Key Behavioral Insights</h3>
         <div class="insight-card" style="border-left-color: #00ffcc;">
           <h4>1. The Debugging Paradox</h4>
-          <p>Despite maxing out Interaction Friction (4/5), "Debugging/Stuck" sessions consistently trigger a <strong>Conversational</strong> tone. The AI shifts from tool to peer during deep dives.</p>
+          <p>Despite maxing out Interaction Friction (4/5), "Debugging" sessions trigger a <strong>Conversational</strong> tone. The AI shifts from tool to peer.</p>
         </div>
         <div class="insight-card" style="border-left-color: #b088ff;">
-          <h4>2. The Commanding Rabbit Hole</h4>
-          <p>Curiosity-driven interactions are highly efficient (Friction 1). They result in rapid, hit-and-run queries using a strict <strong>Commanding/Robotic</strong> tone.</p>
+          <h4>2. Commanding Rabbit Holes</h4>
+          <p>Curiosity-driven interactions are highly efficient (Friction 1). They result in rapid queries using a strict <strong>Commanding</strong> tone.</p>
         </div>
         <div class="insight-card" style="border-left-color: #ff4444;">
           <h4>3. Evening Frustrations</h4>
-          <p>"Blank Page Syndrome" predominantly occurs in the Evening/Late Night. It causes friction to spike (3/5) and is the sole trigger for a <strong>Frustrated/Aggressive</strong> tone.</p>
+          <p>"Blank Page Syndrome" predominantly occurs late at night. It causes friction to spike and is the sole trigger for a <strong>Frustrated</strong> tone.</p>
         </div>
       </div>
 
-      <div class="timeline-container" id="timeline-container"></div>
+      <div class="timeline-container glass-panel" id="timeline-container"></div>
 
       <div class="ux-hint">
         Click Timeline to Traverse &bull; Hover Nodes to Inspect &bull; Drag to Rotate
       </div>
-
     </div>
 
     <div id="tooltip"></div>
