@@ -19,7 +19,6 @@
         position: absolute;
         top: 0; left: 0; width: 100vw; height: 100vh;
         z-index: 10;
-        /* Critical: Allows your mouse to click "through" the UI to rotate the 3D camera */
         pointer-events: none; 
       }
 
@@ -104,22 +103,48 @@
         line-height: 1.5;
       }
 
+      /* FEATURE 5: Interactive Timeline Scrubber */
+      .timeline-container {
+        position: absolute;
+        bottom: 70px; 
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        background: rgba(10, 10, 15, 0.7);
+        padding: 15px 25px;
+        border-radius: 30px;
+        border: 1px solid rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        pointer-events: auto;
+      }
+
+      .timeline-tick {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .timeline-tick:hover, .timeline-tick.active {
+        background: #00ffcc;
+        box-shadow: 0 0 12px #00ffcc;
+        transform: scale(1.3);
+      }
+
       /* Subtle UX Instructions */
       .ux-hint {
         position: absolute;
-        bottom: 30px;
+        bottom: 25px;
         left: 50%;
         transform: translateX(-50%);
-        background: rgba(10, 10, 15, 0.5);
-        padding: 8px 16px;
-        border-radius: 20px;
-        border: 1px solid rgba(255,255,255,0.05);
         color: #888;
         font-size: 11px;
         letter-spacing: 1px;
         text-transform: uppercase;
-        backdrop-filter: blur(5px);
         animation: pulseText 3s infinite alternate;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.8);
       }
 
       @keyframes pulseText {
@@ -160,7 +185,6 @@
 
       <div class="legend">
         <h3>Decoding the Topography</h3>
-        
         <div class="legend-section">
           <strong style="color: #fff">Tone (Glow Color)</strong>
           <div class="legend-row"><div class="color-box" style="background:#b088ff;"></div>Commanding/Robotic</div>
@@ -168,16 +192,14 @@
           <div class="legend-row"><div class="color-box" style="background:#ff4444;"></div>Frustrated/Aggressive</div>
           <div class="legend-row"><div class="color-box" style="background:#ffcc00;"></div>Overly Polite</div>
         </div>
-
         <div class="legend-section">
           <strong style="color: #fff">Catalyst (Geometry)</strong><br>
           Box = Blank Page | Sphere = Efficiency<br>
           Tetrahedron = Urgency | Torus = Curiosity<br>
           Octahedron = Debugging
         </div>
-
         <div class="legend-section">
-          <strong style="color: #fff">Friction:</strong> Particle Vibration<br>
+          <strong style="color: #fff">Friction:</strong> Particle Vibration & Sparks<br>
           <strong style="color: #fff">Depth:</strong> Node Scale<br>
           <strong style="color: #fff">Time of Day:</strong> Y-Axis Height
         </div>
@@ -185,25 +207,24 @@
 
       <div class="insights-sidebar">
         <h3>Key Behavioral Insights</h3>
-        
         <div class="insight-card" style="border-left-color: #00ffcc;">
           <h4>1. The Debugging Paradox</h4>
           <p>Despite maxing out Interaction Friction (4/5), "Debugging/Stuck" sessions consistently trigger a <strong>Conversational</strong> tone. The AI shifts from tool to peer during deep dives.</p>
         </div>
-
         <div class="insight-card" style="border-left-color: #b088ff;">
           <h4>2. The Commanding Rabbit Hole</h4>
           <p>Curiosity-driven interactions are highly efficient (Friction 1). They result in rapid, hit-and-run queries using a strict <strong>Commanding/Robotic</strong> tone.</p>
         </div>
-
         <div class="insight-card" style="border-left-color: #ff4444;">
           <h4>3. Evening Frustrations</h4>
           <p>"Blank Page Syndrome" predominantly occurs in the Evening/Late Night. It causes friction to spike (3/5) and is the sole trigger for a <strong>Frustrated/Aggressive</strong> tone.</p>
         </div>
       </div>
 
+      <div class="timeline-container" id="timeline-container"></div>
+
       <div class="ux-hint">
-        Drag to Rotate &bull; Scroll to Zoom &bull; Hover Nodes to Inspect
+        Click Timeline to Traverse &bull; Hover Nodes to Inspect &bull; Drag to Rotate
       </div>
 
     </div>
