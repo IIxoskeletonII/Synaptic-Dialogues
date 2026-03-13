@@ -4,7 +4,8 @@ import data from '../data/processed_data.json';
 
 // --- SCENE SETUP ---
 const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x05050a, 0.02); 
+// FIX 1: Dramatically reduced fog density to reveal deep background elements
+scene.fog = new THREE.FogExp2(0x05050a, 0.005); 
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
@@ -21,24 +22,77 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 
-// --- LIGHTING ---
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
 scene.add(ambientLight);
 
-// --- SYNAPTIC DUST ---
+// ==========================================
+// --- THE LIVING VOID (BACKGROUND) ---
+// ==========================================
+const backgroundEnvironment = new THREE.Group();
+scene.add(backgroundEnvironment);
+
+// 1. STANDARD DUST (Boosted size and opacity)
 const bgParticlesGeo = new THREE.BufferGeometry();
-const bgParticlesCount = 600; 
+const bgParticlesCount = 800; 
 const posArray = new Float32Array(bgParticlesCount * 3);
 for(let i = 0; i < bgParticlesCount * 3; i++) {
-    posArray[i] = (Math.random() - 0.5) * 120; 
+    posArray[i] = (Math.random() - 0.5) * 200; 
 }
 bgParticlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
 const bgParticlesMat = new THREE.PointsMaterial({
-    size: 0.15, color: 0x4444ff, transparent: true,
-    opacity: 0.3, blending: THREE.AdditiveBlending, depthWrite: false
+    size: 0.25, color: 0x6666ff, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending, depthWrite: false
 });
 const bgParticlesMesh = new THREE.Points(bgParticlesGeo, bgParticlesMat);
-scene.add(bgParticlesMesh);
+backgroundEnvironment.add(bgParticlesMesh);
+
+// 2. FEATURE 5: GHOST PARAMETERS (Brighter, closer)
+const ghostGroup = new THREE.Group();
+const ghostGeometries = [
+    new THREE.IcosahedronGeometry(1.5),
+    new THREE.OctahedronGeometry(1.5),
+    new THREE.TetrahedronGeometry(1.5)
+];
+const ghostMat = new THREE.MeshBasicMaterial({ 
+    color: 0x555577, wireframe: true, transparent: true, opacity: 0.15, blending: THREE.AdditiveBlending 
+});
+for(let i = 0; i < 80; i++) {
+    const geo = ghostGeometries[Math.floor(Math.random() * ghostGeometries.length)];
+    const ghost = new THREE.Mesh(geo, ghostMat);
+    ghost.position.set((Math.random() - 0.5) * 200, (Math.random() - 0.5) * 150, (Math.random() - 0.5) * 80 - 40);
+    ghost.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
+    ghost.userData = { rotSpeedX: (Math.random()-0.5)*0.01, rotSpeedY: (Math.random()-0.5)*0.01 };
+    ghostGroup.add(ghost);
+}
+backgroundEnvironment.add(ghostGroup);
+
+// 3. FEATURE 1: LATENT SPACE PLEXUS (Brighter, closer)
+const plexusNodesCount = 100;
+const plexusData = [];
+for(let i=0; i < plexusNodesCount; i++) {
+    plexusData.push({
+        base: new THREE.Vector3((Math.random()-0.5)*150, (Math.random()-0.5)*100, (Math.random()-0.5)*80 - 20),
+        phaseX: Math.random() * Math.PI * 2, phaseY: Math.random() * Math.PI * 2, phaseZ: Math.random() * Math.PI * 2,
+        currentPos: new THREE.Vector3()
+    });
+}
+const maxConnections = (plexusNodesCount * (plexusNodesCount - 1)) / 2;
+const plexusLinesGeo = new THREE.BufferGeometry();
+const plexusPositions = new Float32Array(maxConnections * 6);
+plexusLinesGeo.setAttribute('position', new THREE.BufferAttribute(plexusPositions, 3));
+const plexusMat = new THREE.LineBasicMaterial({
+    color: 0xaaccff, transparent: true, opacity: 0.25, blending: THREE.AdditiveBlending, depthWrite: false
+});
+const plexusMesh = new THREE.LineSegments(plexusLinesGeo, plexusMat);
+backgroundEnvironment.add(plexusMesh);
+
+// 4. FEATURE 2: DATA-DRIVEN AMBIENT AURORA (Closer radius, higher opacity)
+const auroraGeo = new THREE.SphereGeometry(150, 32, 32);
+const auroraMat = new THREE.MeshBasicMaterial({
+    color: 0x05050a, transparent: true, opacity: 0.2, side: THREE.BackSide, blending: THREE.AdditiveBlending, depthWrite: false
+});
+const auroraMesh = new THREE.Mesh(auroraGeo, auroraMat);
+backgroundEnvironment.add(auroraMesh);
+// ==========================================
 
 // --- VISUAL ENCODING DICTIONARIES ---
 const getColorHex = (tone) => {
@@ -130,7 +184,6 @@ const synapticPulses = [];
 // --- DYNAMIC CINEMATIC TRAVERSAL SETUP ---
 let isIntroPlaying = true;
 let introProgress = 0;
-// FIX: Extended to 18 seconds to ensure a slow, majestic, constant speed across all nodes
 const introDuration = 18.0; 
 controls.enabled = false;
 
@@ -290,12 +343,15 @@ data.forEach((item, index) => {
 // --- RAYCASTER (HOVER & CLICK INTERACTION) ---
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
+const rawMouse = new THREE.Vector2(0, 0);
 const tooltip = document.getElementById('tooltip');
 let hoveredNode = null;
 
 window.addEventListener('mousemove', (event) => {
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    rawMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    rawMouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    mouse.copy(rawMouse);
+    
     tooltip.style.left = (event.clientX + 15) + 'px';
     tooltip.style.top = (event.clientY + 15) + 'px';
 });
@@ -325,15 +381,54 @@ window.addEventListener('click', () => {
 
 // --- ANIMATION LOOP ---
 const clock = new THREE.Clock();
+const targetAuroraColor = new THREE.Color(0x05050a);
 
 function animate() {
     requestAnimationFrame(animate);
     const delta = clock.getDelta();
     const elapsedTime = clock.getElapsedTime();
 
+    // FEATURE 4: Interactive Deep Parallax
+    const parallaxX = rawMouse.x * 15;
+    const parallaxY = rawMouse.y * 15;
+    backgroundEnvironment.position.x += (parallaxX - backgroundEnvironment.position.x) * 0.05;
+    backgroundEnvironment.position.y += (parallaxY - backgroundEnvironment.position.y) * 0.05;
+
+    // Feature 5 Animation: Tumbling Ghosts
+    ghostGroup.children.forEach(ghost => {
+        ghost.rotation.x += ghost.userData.rotSpeedX;
+        ghost.rotation.y += ghost.userData.rotSpeedY;
+    });
+
+    // Feature 1 Animation: Latent Space Plexus Calculation
+    let vertexIndex = 0;
+    plexusData.forEach((node) => {
+        node.currentPos.x = node.base.x + Math.sin(elapsedTime * 0.5 + node.phaseX) * 5;
+        node.currentPos.y = node.base.y + Math.cos(elapsedTime * 0.4 + node.phaseY) * 5;
+        node.currentPos.z = node.base.z + Math.sin(elapsedTime * 0.6 + node.phaseZ) * 5;
+    });
+    
+    // FIX: Increased threshold distance to guarantee connections are visible
+    for(let i=0; i < plexusNodesCount; i++) {
+        for(let j=i+1; j < plexusNodesCount; j++) {
+            const dist = plexusData[i].currentPos.distanceTo(plexusData[j].currentPos);
+            if(dist < 25) { 
+                plexusPositions[vertexIndex++] = plexusData[i].currentPos.x;
+                plexusPositions[vertexIndex++] = plexusData[i].currentPos.y;
+                plexusPositions[vertexIndex++] = plexusData[i].currentPos.z;
+                
+                plexusPositions[vertexIndex++] = plexusData[j].currentPos.x;
+                plexusPositions[vertexIndex++] = plexusData[j].currentPos.y;
+                plexusPositions[vertexIndex++] = plexusData[j].currentPos.z;
+            }
+        }
+    }
+    plexusLinesGeo.setDrawRange(0, vertexIndex / 3);
+    plexusLinesGeo.attributes.position.needsUpdate = true;
+
     bgParticlesMesh.rotation.y = elapsedTime * 0.02;
 
-    // --- BUTTERY SMOOTH, CONSTANT SPEED TRAVERSAL LOGIC ---
+    // --- CINEMATIC TRAVERSAL & AURORA TINTING ---
     if (isIntroPlaying && synapticCurve) {
         introProgress += delta / introDuration;
         
@@ -343,36 +438,37 @@ function animate() {
             controls.enabled = true; 
         }
 
-        // 1. FIX: STRICTLY LINEAR PROGRESSION. No more speeding up in the middle.
         const t = introProgress; 
-        
-        // 2. Map curve path & Look Ahead Point 
         const pathPoint = synapticCurve.getPointAt(t);
         const lookAheadT = Math.min(t + 0.05, 1.0); 
         const pathAheadPoint = synapticCurve.getPointAt(lookAheadT);
-
-        // 3. FIX: LATE DETACHMENT. Power of 10 keeps the camera strictly on the drone path 
-        // until the final moments, preventing premature floating.
         const pullOutFactor = Math.pow(introProgress, 10);
-
-        // 4. Ideal Drone Position
         const dronePos = pathPoint.clone().add(new THREE.Vector3(0, 5, 16));
-
-        // 5. Ideal Final Overview Position
         const overviewPos = new THREE.Vector3(0, 48, 0);
 
-        // 6. Blend Ideal Positions smoothly 
         idealCamPos.lerpVectors(dronePos, overviewPos, pullOutFactor);
         idealLookTarget.lerpVectors(pathAheadPoint, new THREE.Vector3(0, 0, 0), pullOutFactor);
 
-        // 7. ANTI-JITTER MAGIC: Exponential Moving Average (EMA) smoothing
         const smoothing = 1 - Math.exp(-6 * delta);
         currentCamPos.lerp(idealCamPos, smoothing);
         currentLookTarget.lerp(idealLookTarget, smoothing * 1.5);
 
         camera.position.copy(currentCamPos);
         controls.target.copy(currentLookTarget);
+
+        const index1 = Math.floor(t * (data.length - 1));
+        const index2 = Math.min(index1 + 1, data.length - 1);
+        const interpolation = (t * (data.length - 1)) - index1;
+        const c1 = new THREE.Color(getColorHex(data[index1].tone));
+        const c2 = new THREE.Color(getColorHex(data[index2].tone));
+        targetAuroraColor.copy(c1).lerp(c2, interpolation);
+    } 
+    else if (!hoveredNode) {
+        // FIX: Deep Indigo resting color so the Aurora remains visible in the background
+        targetAuroraColor.setHex(0x111122); 
     }
+
+    auroraMat.color.lerp(targetAuroraColor, 0.03);
 
     if (isFocusing) {
         focusProgress += delta * 1.5; 
@@ -395,7 +491,6 @@ function animate() {
         });
     }
 
-    // Node Group Animations
     nodeGroups.forEach(group => {
         const friction = group.userData.friction; 
         const catalyst = group.userData.catalyst;
@@ -450,6 +545,8 @@ function animate() {
             
             const data = object.userData.rawInteraction;
             const hexString = '#' + getColorHex(data.tone).toString(16).padStart(6, '0');
+
+            targetAuroraColor.setHex(getColorHex(data.tone));
 
             tooltip.innerHTML = `
                 <div style="margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 8px; color: #fff; font-size: 14px; letter-spacing: 0.5px;">
