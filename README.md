@@ -1,7 +1,6 @@
 # 🌌 Synaptic Dialogues: Mapping the Psychology of AI Obsession
 
 ![Project Status](https://img.shields.io/badge/Status-Completed-success)
-![Academic Target](https://img.shields.io/badge/Grade_Target-30%2F30-blue)
 ![Tech Stack](https://img.shields.io/badge/Tech-Three.js%20%7C%20WebGL%20%7C%20Vite-black)
 
 🌍 **Experience the Live Interactive Topography [Here](synaptic-dialogues.vercel.app):** 
@@ -55,7 +54,7 @@ The data is translated into a 3D procedural environment using the following enco
 
 ## 💻 Installation & Local Development
 
-This project uses [Vite](https://vitejs.dev/) and [Three.js](https://threejs.org/).
+This project uses [Vite](https://vitejs.dev/) and [Three.js](https://threejs.org/). If you would like to play around with it yourselves:
 
 1. **Clone the repository:**
    ```bash
