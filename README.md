@@ -4,7 +4,7 @@
 ![Academic Target](https://img.shields.io/badge/Grade_Target-30%2F30-blue)
 ![Tech Stack](https://img.shields.io/badge/Tech-Three.js%20%7C%20WebGL%20%7C%20Vite-black)
 
-🌍 **Experience the Live Interactive Topography Here:** [Insert your GitHub Pages Link Here]
+🌍 **Experience the Live Interactive Topography [Here](synaptic-dialogues.vercel.app):** 
 
 **Synaptic Dialogues** is an interactive, 3D data humanism project that transforms quantitative data about my personal interactions with Artificial Intelligence into a living, emotional topography. 
 
@@ -14,9 +14,7 @@ Built for the "Data Humanism" university course, this project abandons tradition
 
 ## 📊 The Dataset & Methodology
 
-Following the *Dear Data* philosophy, I meticulously tracked my personal AI interactions over a multi-day period. 
-
-**A Note on Data Volume:** The project rubric requires a minimum of 50 data points. While this tracker logged 22 distinct chronological interaction events, it yielded over **110 distinct data points** across 5 rigorously locked-in variables per interaction. This methodology (treating individual variable matrix cells as data points) was explicitly reviewed and approved by the course professor.
+Following the *Dear Data* philosophy, I meticulously tracked my personal AI interactions over a one week period. 
 
 ### The 5 Tracked Variables:
 1. **The Catalyst (Categorical):** Why did I initiate the conversation? *(Blank Page Syndrome, Efficiency/Laziness, Urgency/Deadline, Curiosity/Rabbit Hole, Debugging/Stuck)*
