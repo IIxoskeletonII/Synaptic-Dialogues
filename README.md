@@ -3,7 +3,7 @@
 ![Project Status](https://img.shields.io/badge/Status-Completed-success)
 ![Tech Stack](https://img.shields.io/badge/Tech-Three.js%20%7C%20WebGL%20%7C%20Vite-black)
 
-🌍 **Experience the Live Interactive Topography [Here](synaptic-dialogues.vercel.app):** 
+🌍 **Experience the Live Interactive Topography [Here](https://synaptic-dialogues.vercel.app):** 
 
 **Synaptic Dialogues** is an interactive, 3D data humanism project that transforms quantitative data about my personal interactions with Artificial Intelligence into a living, emotional topography. 
 
