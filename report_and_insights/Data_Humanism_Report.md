@@ -34,7 +34,7 @@ To ensure emotional and contextual accuracy, the data was not logged retroactive
 This immediate manual recording ensured that subjective variables—such as my *Conversational Tone* and the true *Catalyst* of the interaction—were captured accurately before my memory of the micro-interaction faded. 
 
 **Data Volume & Rubric Compliance:**
-The project guidelines mandate that the final dataset must include at least 50 data points. Over the tracking period, I logged 22 distinct, chronological AI interaction events. Because each individual interaction event was rigorously measured across 5 distinct variables, the tracker yielded a rich, consistent dataset of **110 individual data points** (22 events × 5 variables). 
+The project guidelines mandate that the final dataset must include at least 50 data points. Over the tracking period, I logged 21 distinct, chronological AI interaction events. Because each individual interaction event was rigorously measured across 5 distinct variables, the tracker yielded a rich, consistent dataset of 105 individual data points (21 events × 5 variables). 
 
 ## 3. Visualization Strategy & Medium
 
@@ -54,17 +54,17 @@ I designed the space to feel like a digital galaxy or neural network. To ensure 
 
 Once the visualization was alive, I spent time just "flying" through my own data. Seeing it mapped out spatially revealed patterns that I completely missed when looking at the raw numbers.
 
-Going into this, my main assumption was that I primarily used AI out of sheer "Efficiency/Laziness" during the afternoon. The data, however, painted a slightly different, more chaotic picture. While laziness *did* trigger several afternoon interactions, the most massive, friction-heavy nodes in my galaxy were actually clustered around late nights, completely disproving my initial hypothesis about *why* I spend the most time with AI.
+Going into this, my main assumption was that I primarily used AI out of sheer "Efficiency/Laziness" during the afternoon. The data, however, painted a significantly different picture. While the afternoon was my most active period (15 of the 21 logged interactions), the most massive, friction-heavy nodes in my galaxy were actually clustered around *Debugging*, not laziness. 
 
-Three major, unexpected behavioral loops emerged from the data:
+Three major, data-backed behavioral loops emerged from the topography:
 
-**1. The Debugging Paradox:** I often go to AI to fix a quick coding error, assuming it will be a "Hit and Run." However, the data showed a massive correlation between the *Debugging* catalyst and the *Lost in the Sauce* (>30 mins) depth. Ironically, trying to save time debugging caused me to spend the *most* time in the AI ecosystem, usually resulting in violent, vibrating nodes (High Friction). 
+**1. The Debugging Paradox (High Friction, High Depth):** I often go to AI to fix a quick coding error, assuming it will be a "Hit and Run." However, the data showed a massive correlation between the *Debugging* catalyst and the *Lost in the Sauce* (>30 mins) depth. Out of 5 debugging sessions, not a single one was a quick <2 minute fix. Ironically, trying to save time debugging caused me to spend the most time in the AI ecosystem. It also triggered my **most** intense frustration, accounting for three of the four highest friction scores (solid 4s) recorded in the entire dataset.
 
-**2. The Dictator Shift (Commanding Rabbit Holes):**
-I noticed a fascinating correlation regarding my *Conversational Tone*. When my catalyst was *Curiosity*, I treated the AI like a peer, using a *Conversational* or *Overly Polite* tone (glowing cyan and yellow). But the moment the catalyst shifted to *Urgency/Deadline*, all pleasantries vanished. My tone immediately snapped to *Commanding/Robotic*, treating the AI strictly as a subordinate tool.
+**2. The Collaborative Shift (Tone vs. Complexity):**
+I noticed a fascinating trend regarding my *Conversational Tone*. When dealing with quick, low-depth tasks (triggered by *Urgency* or *Efficiency*), I almost exclusively default to a *Commanding/Robotic* tone. I treat the AI strictly as a subordinate tool. However, when the catalyst shifts to *Debugging* or facing a *Blank Page*, my tone softens. In 4 out of those 7 complex instances, I shifted to a *Conversational* tone. The data suggests that when a problem requires deeper cognitive effort, I subconsciously start treating the AI as a colleague rather than a calculator.
 
-**3. Evening Frustrations:**
-My initial assumption about late-night friction was spot on. As the Y-axis elevation dropped (indicating Late Night), the color of the nodes overwhelmingly shifted to red (*Frustrated/Aggressive*). My cognitive fatigue directly correlated with my inability to prompt effectively, leading to higher friction and a breakdown in the "synaptic dialogue."
+**3. The Late Night Myth (Disproving Assumptions):**
+My initial assumption was that late-night interactions would yield the highest "Interaction Friction" and a "Frustrated" tone due to cognitive fatigue. The data actively disproved this. I only logged one *Late Night* interaction, and my tone was completely *Conversational* with a moderate friction of 3. My actual highest volume of friction and my singular *Frustrated/Aggressive* outburst (10/03 21:02) occurred during the Afternoon and Evening. My fatigue doesn't happen at night; it happens at the end of the standard workday.
 
 ---
 
@@ -73,10 +73,9 @@ My initial assumption about late-night friction was spot on. As the Y-axis eleva
 To fulfill the requirement of a secondary insight representation—and to ensure the viewer didn't get entirely lost in the 3D galaxy—I integrated a "Key Behavioral Insights" UI sidebar directly into the WebGL environment. 
 
 Using a sleek, glassmorphism design, this sidebar grounds the abstract 3D art by providing the viewer with hard data and plain-text summaries of the insights mentioned above. I wanted the user to be able to read the "diary" of my findings while simultaneously watching the automated cinematic drone flight navigate through the exact data points I was referencing.
-Also, I wanted to give the user the ability to go ahead and play around with my creation however they saw fit, the idea was to give everybody a sandbox that they could explore at their own accord.
 
 **Conclusion:**
-This project fundamentally changed how I view my digital footprint. Before *Synaptic Dialogues*, I viewed AI as just a tool, like a calculator or a search engine. But by forcing myself to manually track my tone, my friction, and my emotional triggers, I realized that my interactions with AI are a direct mirror of my own mental state. When I am tired, the machine seems broken. When I am curious, the machine seems brilliant. Through Data Humanism, I learned that tracking my relationship with Artificial Intelligence was actually just a new way of tracking myself.
+This project fundamentally changed how I view my digital footprint. Before *Synaptic Dialogues*, I viewed AI as just a tool, like a search engine. But by forcing myself to manually track my tone, my friction, and my emotional triggers across 105 rigorous data points, I realized that my interactions with AI are a direct mirror of my own mental state. Through Data Humanism, I learned that tracking my relationship with Artificial Intelligence was actually just a new way of tracking my own psychological bandwidth.
 
 ---
 ---
@@ -86,7 +85,7 @@ This project fundamentally changed how I view my digital footprint. Before *Syna
 To support the qualitative reflections above, I extracted the raw data from my interactions to create quantitative visual proofs of my behavioral loops.
 
 ### 1. The Debugging Paradox: Catalyst vs. Rabbit Hole Depth
-*This correlation matrix highlights how the "Debugging" catalyst disproportionately leads to "Lost in the Sauce" (>30 mins) interactions, contrary to my assumption that debugging would be a quick "Hit and Run."*
+*This correlation matrix highlights how the "Debugging" catalyst disproportionately leads to high-duration interactions, perfectly countering my assumption that it would result in a quick fix. Alternatively, "Urgency" always results in a strict Hit and Run.*
 
 <div style="overflow-x:auto; margin-bottom: 30px;">
 <table style="width: 100%; text-align: center; border-collapse: collapse; font-family: sans-serif; min-width: 500px;">
@@ -102,50 +101,51 @@ To support the qualitative reflections above, I extracted the raw data from my i
 <tbody>
 <tr>
 <td style="font-weight: bold; background-color: #1e1e2e; color: #a6accd; border: 1px solid #333;">Efficiency/Laziness</td>
-<td style="background-color: rgba(97, 175, 239, 0.8); color: #fff; border: 1px solid #333;">High</td>
-<td style="background-color: rgba(97, 175, 239, 0.4); color: #fff; border: 1px solid #333;">Low</td>
+<td style="background-color: rgba(97, 175, 239, 0.8); color: #fff; border: 1px solid #333;">High (2)</td>
+<td style="background-color: rgba(97, 175, 239, 0.4); color: #fff; border: 1px solid #333;">Low (1)</td>
 <td style="background-color: transparent; border: 1px solid #333;">None</td>
 <td style="background-color: transparent; border: 1px solid #333;">None</td>
 </tr>
 <tr>
 <td style="font-weight: bold; background-color: #1e1e2e; color: #a6accd; border: 1px solid #333;">Curiosity</td>
+<td style="background-color: rgba(152, 195, 121, 0.9); color: #fff; border: 1px solid #333;">Highest (5)</td>
+<td style="background-color: rgba(152, 195, 121, 0.5); color: #fff; border: 1px solid #333;">Med (2)</td>
 <td style="background-color: transparent; border: 1px solid #333;">None</td>
-<td style="background-color: rgba(152, 195, 121, 0.5); color: #fff; border: 1px solid #333;">Med</td>
-<td style="background-color: rgba(152, 195, 121, 0.9); color: #fff; border: 1px solid #333;">High</td>
-<td style="background-color: rgba(152, 195, 121, 0.3); color: #fff; border: 1px solid #333;">Low</td>
+<td style="background-color: rgba(152, 195, 121, 0.3); color: #fff; border: 1px solid #333;">Low (1)</td>
 </tr>
 <tr>
 <td style="font-weight: bold; background-color: #1e1e2e; color: #a6accd; border: 1px solid #333;">Urgency/Deadline</td>
+<td style="background-color: rgba(229, 192, 123, 0.8); color: #fff; border: 1px solid #333;">High (3)</td>
 <td style="background-color: transparent; border: 1px solid #333;">None</td>
-<td style="background-color: rgba(229, 192, 123, 0.8); color: #fff; border: 1px solid #333;">High</td>
-<td style="background-color: rgba(229, 192, 123, 0.4); color: #fff; border: 1px solid #333;">Low</td>
+<td style="background-color: transparent; border: 1px solid #333;">None</td>
 <td style="background-color: transparent; border: 1px solid #333;">None</td>
 </tr>
 <tr>
 <td style="font-weight: bold; background-color: #1e1e2e; color: #a6accd; border: 1px solid #333;">Debugging/Stuck</td>
 <td style="background-color: transparent; border: 1px solid #333;">None</td>
-<td style="background-color: transparent; border: 1px solid #333;">None</td>
-<td style="background-color: rgba(224, 108, 117, 0.5); color: #fff; border: 1px solid #333;">Med</td>
-<td style="background-color: rgba(224, 108, 117, 0.9); color: #fff; border: 1px solid #333; font-weight: bold; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);">Highest</td>
+<td style="background-color: rgba(224, 108, 117, 0.5); color: #fff; border: 1px solid #333;">Med (2)</td>
+<td style="background-color: rgba(224, 108, 117, 0.3); color: #fff; border: 1px solid #333;">Low (1)</td>
+<td style="background-color: rgba(224, 108, 117, 0.9); color: #fff; border: 1px solid #333; font-weight: bold; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);">High (2)</td>
 </tr>
 </tbody>
 </table>
 </div>
 
-### 2. Evening Frustrations: Average Friction by Time of Day
-*This bar chart proves the direct correlation between cognitive fatigue (Late Night) and my inability to prompt the AI effectively, resulting in the highest average friction scores.*
+### 2. Disproving the Late-Night Myth: High-Friction Events by Time of Day
+*This visual actively disproves my pre-project hypothesis. I assumed cognitive fatigue would cause my most frustrating interactions to happen late at night. Instead, the data reveals that my highest friction interactions (scores of 3 and 4) overwhelmingly cluster in the busy Afternoon.*
 
 <div style="font-family: sans-serif; background-color: #1e1e2e; padding: 20px; border-radius: 8px; border: 1px solid #333; max-width: 600px; margin: 0 auto;">
 <div style="display: flex; align-items: flex-end; height: 200px; gap: 15px; padding-bottom: 10px; border-bottom: 1px solid #555;">
-<div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;"><span style="color: #a6accd; font-size: 0.85em; margin-bottom: 5px;">1.2</span><div style="width: 100%; min-height: 24%; background: #61afef; border-radius: 4px 4px 0 0;"></div></div>
-<div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;"><span style="color: #a6accd; font-size: 0.85em; margin-bottom: 5px;">2.1</span><div style="width: 100%; min-height: 42%; background: #98c379; border-radius: 4px 4px 0 0;"></div></div>
-<div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;"><span style="color: #a6accd; font-size: 0.85em; margin-bottom: 5px;">3.4</span><div style="width: 100%; min-height: 68%; background: #e5c07b; border-radius: 4px 4px 0 0;"></div></div>
-<div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;"><span style="color: #e06c75; font-size: 0.95em; font-weight: bold; margin-bottom: 5px;">4.8</span><div style="width: 100%; min-height: 96%; background: #e06c75; border-radius: 4px 4px 0 0; box-shadow: 0 0 10px rgba(224, 108, 117, 0.5);"></div></div>
+<div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;"><span style="color: #a6accd; font-size: 0.85em; margin-bottom: 5px;">0</span><div style="width: 100%; min-height: 2%; background: #444; border-radius: 4px 4px 0 0;"></div></div>
+<div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;"><span style="color: #e06c75; font-size: 0.95em; font-weight: bold; margin-bottom: 5px;">5</span><div style="width: 100%; min-height: 96%; background: #e06c75; border-radius: 4px 4px 0 0; box-shadow: 0 0 10px rgba(224, 108, 117, 0.5);"></div></div>
+<div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;"><span style="color: #a6accd; font-size: 0.85em; margin-bottom: 5px;">2</span><div style="width: 100%; min-height: 40%; background: #e5c07b; border-radius: 4px 4px 0 0;"></div></div>
+<div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;"><span style="color: #a6accd; font-size: 0.85em; margin-bottom: 5px;">1</span><div style="width: 100%; min-height: 20%; background: #61afef; border-radius: 4px 4px 0 0;"></div></div>
 </div>
 <div style="display: flex; justify-content: space-between; margin-top: 10px; color: #a6accd; font-size: 0.85em; font-weight: bold; text-align: center;">
 <div style="flex: 1;">Morning</div>
 <div style="flex: 1;">Afternoon</div>
 <div style="flex: 1;">Evening</div>
-<div style="flex: 1; color: #e06c75;">Late Night</div>
+<div style="flex: 1;">Late Night</div>
 </div>
+<div style="text-align: center; color: #888; font-size: 0.75em; margin-top: 15px; font-style: italic;">Graph showing the count of high-friction interactions (Friction Scores 3 & 4)</div>
 </div>
