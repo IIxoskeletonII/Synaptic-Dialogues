@@ -3,6 +3,10 @@
 **Matricola:** 807871
 **Course:** Data Visualisation (Data Humanism)
 
+Live WebGL Visualization: [Explore Synaptic Dialogues](https://synaptic-dialogues.vercel.app/)
+
+(If the link above does not click, please visit: https://synaptic-dialogues.vercel.app/)
+
 ---
 
 ## 1. Project Originality & Introduction
